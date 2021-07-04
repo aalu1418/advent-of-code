@@ -1,8 +1,31 @@
 package y2015
 
-import "fmt"
+import (
+	"strings"
+)
 
-// OneOne implements Day 1 function 1
-func OneOne(name string) {
-	fmt.Printf("hello, %s\n", name)
+// One implements Day 1
+func One(input string) (floor int, index int) {
+	// 1
+	open := strings.Count(input, "(")
+	close := strings.Count(input, ")")
+	floor = open - close
+
+	// 2
+	count := 0
+	for i := 0; i < len(input); i++ {
+		if string(input[i]) == "(" {
+			count++
+		}
+
+		if string(input[i]) == ")" {
+			count--
+		}
+
+		if count < 0 {
+			index = i + 1
+			break
+		}
+	}
+	return
 }
