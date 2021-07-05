@@ -5,7 +5,7 @@ import (
 )
 
 // Five implements functions for day 5
-func Five(input string) (good int, temp2 string) {
+func Five(input string) (good int, good2 int) {
 	// 1
 	for _, s := range strings.Split(input, "\n") {
 		vowels := 0
@@ -16,7 +16,7 @@ func Five(input string) (good int, temp2 string) {
 			}
 		}
 		if vowels < 3 {
-			break
+			continue
 		}
 
 		duplicate := false
@@ -30,7 +30,7 @@ func Five(input string) (good int, temp2 string) {
 			}
 		}
 		if duplicate == false {
-			break
+			continue
 		}
 
 		contains := false
@@ -41,10 +41,33 @@ func Five(input string) (good int, temp2 string) {
 			}
 		}
 		if contains == true {
-			break
+			continue
 		}
 
 		good++
+	}
+
+	// 2
+	for _, s := range strings.Split(input, "\n") {
+		spaced := false
+		contains := false
+		for i := range s {
+			if i == len(s)-2 {
+				break
+			}
+
+			if strings.Count(s, s[i:i+2]) == 2 {
+				contains = true
+			}
+			if s[i] == s[i+2] {
+				spaced = true
+			}
+
+			if spaced && contains {
+				good2++
+				break
+			}
+		}
 	}
 
 	return
