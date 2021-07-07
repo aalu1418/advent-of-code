@@ -1,7 +1,6 @@
 package y2015
 
 import (
-	"fmt"
 	"math"
 	"strconv"
 	"strings"
@@ -27,60 +26,49 @@ func Nine(input string) (minD int, maxD int) {
 	}
 
 	minD = maxInt
-	maxD = 0
+	maxD = maxInt
 	for city := range d {
-		v := map[string]bool{}
-		v[city] = true
-		distance := step(city, minD, &d, &v)
+		distance := step(city, &d, map[string]bool{}, false)
 		minD = int(math.Min(float64(minD), float64(distance)))
 
-		vMax := map[string]bool{}
-		vMax[city] = true
-		distance = stepMax(city, &d, vMax)
-		fmt.Println(distance)
-		maxD = int(math.Max(float64(maxD), float64(distance)))
-		break
+		distance = step(city, &d, map[string]bool{}, true)
+		maxD = int(math.Min(float64(maxD), float64(distance)))
 	}
+	maxD *= -1
 
 	return
 }
 
-func step(city string, stop int, paths *map[string]dist, visited *map[string]bool) (dist int) {
-	minD := maxInt
-	minCity := ""
-
-	for next := range (*paths)[city] {
-		if !(*visited)[next] && (*paths)[city][next] < minD {
-			minD = (*paths)[city][next]
-			minCity = next
-		}
-	}
-
-	(*visited)[minCity] = true
-	if len(*visited) == len(*paths) || stop-minD < 0 || minCity == "" {
-		return minD
-	}
-	return minD + step(minCity, stop-minD, paths, visited)
-}
-
-// not working
-func stepMax(city string, paths *map[string]dist, visited map[string]bool) (dist int) {
-
-	var visitCopy = map[string]bool{}
+func step(city string, paths *map[string]dist, visited map[string]bool, max bool) (dist int) {
+	// copy
+	visitNext := map[string]bool{}
 	for i := range visited {
-		visitCopy[i] = visited[i]
+		visitNext[i] = visited[i]
 	}
 
-	maxD := 0
+	factor := 1
+	if max {
+		factor = -1
+	}
+	visitNext[city] = true
+
+	var d []int
 	for next := range (*paths)[city] {
 		if !(visited)[next] {
-			(visited)[next] = true
-			newD := (*paths)[city][next] + stepMax(next, paths, visitCopy)
-			fmt.Println(newD)
-			if newD > maxD {
-				maxD = newD
-			}
+			d = append(d, factor*(*paths)[city][next]+step(next, paths, visitNext, max))
 		}
 	}
-	return maxD
+
+	if len(d) == 0 {
+		return 0
+	}
+
+	dist = maxInt
+	for _, v := range d {
+		if v < dist {
+			dist = v
+		}
+	}
+
+	return
 }
