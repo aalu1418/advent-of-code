@@ -2,6 +2,8 @@ package y2015
 
 import (
 	"fmt"
+	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -21,8 +23,20 @@ func indexOf(a *[]string, s string) (ind int) {
 // Thirteen implements the solution for day 13
 func Thirteen(input string) (out1 int, out2 int) {
 	// parsing
-	m := [][]int{}
+	re := regexp.MustCompile(`[A-Z][a-z]+`)
+	namesAll := re.FindAllString(input, -1)
+	sort.Strings(namesAll)
 	guests := []string{}
+	for _, n := range namesAll {
+		if len(guests) != 0 && guests[len(guests)-1] == n {
+			continue
+		}
+		guests = append(guests, n)
+	}
+	m := make([][]int, len(guests))
+	for i := range m {
+		m[i] = make([]int, len(guests))
+	}
 	for _, s := range strings.Split(input, "\n") {
 		s = strings.ReplaceAll(s, ".", "")
 		sub := strings.Split(s, " ")
@@ -37,8 +51,12 @@ func Thirteen(input string) (out1 int, out2 int) {
 
 		g1 := indexOf(&guests, sub[0])
 		g2 := indexOf(&guests, sub[len(sub)-1])
-		m[g1][g2] = sign * amt
-		fmt.Println(sub[0], g1, sub[len(sub)-1], g2)
+		m[g1][g2] += sign * amt
+		m[g2][g1] += sign * amt
+	}
+
+	for _, r := range m {
+		fmt.Println(r)
 	}
 
 	return
