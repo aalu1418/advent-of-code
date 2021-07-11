@@ -2,42 +2,58 @@ package y2015
 
 import (
 	"fmt"
-	"regexp"
-	"sort"
 	"strconv"
 	"strings"
 )
 
-func indexOf(a *[]string, s string) (ind int) {
-	for i, v := range *a {
+func contains(a *[]string, s string) bool {
+	for _, v := range *a {
 		if v == s {
-			ind = i
-			return
+			return true
 		}
 	}
-	*a = append(*a, s)
-	ind = len(*a) - 1
-	return
+	return false
+}
+
+type intTable map[string]map[string]int
+
+func mapData(x string, y string, v int, table *intTable) {
+	if (*table)[x] == nil {
+		(*table)[x] = map[string]int{}
+	}
+
+	if (*table)[y] == nil {
+		(*table)[y] = map[string]int{}
+	}
+
+	(*table)[x][y] += v
+	(*table)[y][x] += v
+}
+
+func combine(m *int, t *intTable, cVal int, visited []string) {
+	var v int
+	for name := range *t {
+		v = cVal
+		if !contains(&visited, name) {
+			v += (*t)[visited[len(visited)-1]][name]
+			combine(m, t, v, append(visited, name))
+		}
+	}
+
+	if len(visited) == len(*t) {
+		v += (*t)[visited[len(visited)-1]][visited[0]]
+		if v > *m {
+			*m = v
+		}
+	}
 }
 
 // Thirteen implements the solution for day 13
 func Thirteen(input string) (out1 int, out2 int) {
 	// parsing
-	re := regexp.MustCompile(`[A-Z][a-z]+`)
-	namesAll := re.FindAllString(input, -1)
-	sort.Strings(namesAll)
-	guests := []string{}
-	for _, n := range namesAll {
-		if len(guests) != 0 && guests[len(guests)-1] == n {
-			continue
-		}
-		guests = append(guests, n)
-	}
-	m := make([][]int, len(guests))
-	for i := range m {
-		m[i] = make([]int, len(guests))
-	}
-	for _, s := range strings.Split(input, "\n") {
+	hIndex := intTable{}
+	vStart := ""
+	for i, s := range strings.Split(input, "\n") {
 		s = strings.ReplaceAll(s, ".", "")
 		sub := strings.Split(s, " ")
 		amt, err := strconv.Atoi(sub[3])
@@ -48,16 +64,21 @@ func Thirteen(input string) (out1 int, out2 int) {
 		if sub[2] == "lose" {
 			sign = -1
 		}
+		mapData(sub[0], sub[len(sub)-1], sign*amt, &hIndex)
 
-		g1 := indexOf(&guests, sub[0])
-		g2 := indexOf(&guests, sub[len(sub)-1])
-		m[g1][g2] += sign * amt
-		m[g2][g1] += sign * amt
+		// establish starting point
+		if i == 0 {
+			vStart = sub[0]
+		}
+	}
+	combine(&out1, &hIndex, 0, []string{vStart})
+
+	hIndex["self"] = map[string]int{}
+	for i := range hIndex {
+		hIndex[i]["self"] = 0
 	}
 
-	for _, r := range m {
-		fmt.Println(r)
-	}
+	combine(&out2, &hIndex, 0, []string{vStart})
 
 	return
 }
