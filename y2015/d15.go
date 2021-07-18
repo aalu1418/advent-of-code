@@ -1,7 +1,6 @@
 package y2015
 
 import (
-	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -29,60 +28,90 @@ func (i *ingredient) Max() {
 	}
 }
 
-func objFunc(coords map[string]int, consts *map[string]ingredient) int {
+func objFunc(coords []int, consts *[]ingredient) (score int, cal int) {
 	vals := ingredient{}
-	for k, v := range *consts {
-		vals.c += coords[k] * v.c
-		vals.d += coords[k] * v.d
-		vals.f += coords[k] * v.f
-		vals.t += coords[k] * v.t
+	for i := 0; i < len(coords); i++ {
+		vals.c += coords[i] * (*consts)[i].c
+		vals.d += coords[i] * (*consts)[i].d
+		vals.f += coords[i] * (*consts)[i].f
+		vals.t += coords[i] * (*consts)[i].t
+		vals.cal += coords[i] * (*consts)[i].cal
 	}
 	vals.Max()
-	return vals.c * vals.d * vals.f * vals.t
+	score = vals.c * vals.d * vals.f * vals.t
+	cal = vals.cal
+	return
+}
+
+func sum(a []int) (t int) {
+	for i := 0; i < len(a); i++ {
+		t += a[i]
+	}
+	return
 }
 
 // Fifteen implements the solution to day 15
 func Fifteen(input string) (out1 int, out2 int) {
+	max := 100
+
 	// parse
-	ing := map[string]ingredient{}
-	coords := map[string]int{}
-	total := 100
+	ing := []ingredient{}
 	for _, s := range strings.Split(input, "\n") {
 		re := regexp.MustCompile(`-?\d+`)
 		v := re.FindAllString(s, -1)
-		re = regexp.MustCompile(`[A-Z][a-z]+`)
-		k := re.FindString(s)
 
 		vI := []int{}
 		for _, vS := range v {
 			temp, _ := strconv.Atoi(vS)
 			vI = append(vI, temp)
 		}
-		ing[k] = ingredient{vI[0], vI[1], vI[2], vI[3], vI[4]}
-		coords[k] = 1
-		total--
+		ing = append(ing, ingredient{vI[0], vI[1], vI[2], vI[3], vI[4]})
 	}
 
-	for i := 0; i < total; i++ {
-		max := 0
-		maxCoords := map[string]int{}
-		for k := range coords {
-			inputs := map[string]int{}
-			for key, val := range coords {
-				inputs[key] = val
-			}
-			inputs[k]++
+	// naive solution (would be interesting to use an optimization package like gonum)
 
-			v := objFunc(inputs, &ing)
-			if v > max {
-				max = v
-				maxCoords = inputs
+	// create possible combinations
+	combs := [][]int{}
+	for i := 0; i < len(ing); i++ {
+		temp := [][]int{} //temp
+
+		for l := 0; l <= max; l++ {
+			if i == 0 {
+				a := make([]int, len(ing))
+				a[i] = l
+				temp = append(temp, a)
+			}
+
+			for j := 0; j < len(combs); j++ {
+				if i == len(ing)-1 {
+					combs[j][i] = max - sum(combs[j])
+					continue
+				}
+
+				t := make([]int, len(ing))
+				copy(t, combs[j])
+				t[i] = l
+				if sum(t) <= max {
+					temp = append(temp, t)
+				}
 			}
 		}
-		coords = maxCoords
+
+		if i != len(ing)-1 {
+			combs = temp //overwrite
+		}
 	}
-	fmt.Println(coords)
-	out1 = objFunc(coords, &ing)
+
+	for _, coords := range combs {
+		points, cals := objFunc(coords, &ing)
+		if points > out1 {
+			out1 = points
+		}
+
+		if cals == 500 && points > out2 {
+			out2 = points
+		}
+	}
 
 	return
 }
