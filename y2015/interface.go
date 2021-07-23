@@ -19,4 +19,6 @@ var Interfaces = map[string]interface{}{
 	"15": Fifteen,
 	"16": Sixteen,
 	"17": Seventeen,
+	"18": Eighteen,
+	"19": Nineteen,
 }
