@@ -24,4 +24,5 @@ var Interfaces = map[string]interface{}{
 	"20": Twenty,
 	"21": Twentyone,
 	"22": Twentytwo,
+	"23": Twentythree,
 }
