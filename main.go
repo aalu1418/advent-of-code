@@ -31,6 +31,11 @@ func Call(year string, function string, params ...string) (result []reflect.Valu
 }
 
 func main() {
+	if len(os.Args) < 3 {
+		fmt.Println("Not enough input arguments")
+		return
+	}
+
 	year := os.Args[1]
 	funcName := os.Args[2]
 	funcArgs := os.Args[3:]
