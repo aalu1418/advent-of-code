@@ -19,7 +19,7 @@ fn main() {
     println!("Outputs: {:?}", out);
 }
 
-fn not_implemented(day: String) -> (isize, isize) {
+fn not_implemented(day: String) -> (i32, i32) {
     println!("⚠️  Function '{}' not implemented", day);
     (0, 0)
 }
