@@ -18,11 +18,14 @@ go run main.go 2015 12 "some random input"
 
 ```bash
 # Format
-# TBD
+cargo run -p y2016 -- <day> <input> ...
 
 # Example
-cargo run -p y2016
+cargo run -p y2016 -- 1 "some random input"
 ```
+
+<!-- ## 2017 - Elixir
+[Advent of Code: 2017](https://adventofcode.com/2017) solutions in Elixir -->
 
 <!-- Notes:
 * Offline go docs: `godoc -http=localhost:9000` -->

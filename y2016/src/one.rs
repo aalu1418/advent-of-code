@@ -1,9 +1,12 @@
 use std::collections::HashMap;
 
 pub fn one(input: Vec<String>) -> (i32, i32) {
-    let mut x = 0;
-    let mut y = 0;
-    let mut d = 0; // N - 0, E - 1, S - 2, W - 3
+    let mut x: i32 = 0;
+    let mut y: i32 = 0;
+    let mut d: i32 = 0; // N - 0, E - 1, S - 2, W - 3
+    let mut history = HashMap::new();
+    history.insert((0, 0), true);
+    let mut repeat_dist: i32 = 0;
 
     for line in input[0].split(", ") {
         let (lr, step) = line.split_at(1);
@@ -18,12 +21,19 @@ pub fn one(input: Vec<String>) -> (i32, i32) {
 
         let mul = if d >= 2 { -1 } else { 1 };
 
-        if d % 2 == 0 {
-            y += mul * step;
-        } else {
-            x += mul * step;
+        for _ in 0..step {
+            if d % 2 == 0 {
+                y += mul;
+            } else {
+                x += mul;
+            }
+
+            let check = history.insert((x, y), true);
+            if check != None && repeat_dist == 0 {
+                repeat_dist = x.abs() + y.abs();
+            }
         }
     }
 
-    (x.abs() + y.abs(), 0)
+    (x.abs() + y.abs(), repeat_dist)
 }
