@@ -1,5 +1,6 @@
 use std::env;
-mod one;
+mod d1;
+mod d2;
 
 fn main() {
     let mut args: Vec<String> = env::args().collect();
@@ -13,13 +14,14 @@ fn main() {
     args.remove(0); // remove day argument
 
     let out = match &day[..] {
-        "1" => one::one(args),
+        "1" => d1::one(args),
+        "2" => d2::two(args),
         _ => not_implemented(day),
     };
     println!("Outputs: {:?}", out);
 }
 
-fn not_implemented(day: String) -> (i32, i32) {
+fn not_implemented(day: String) -> (String, String) {
     println!("⚠️  Function '{}' not implemented", day);
-    (0, 0)
+    ("ERROR".to_string(), "ERROR".to_string())
 }

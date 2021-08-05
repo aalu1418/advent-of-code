@@ -19,9 +19,11 @@ go run main.go 2015 12 "some random input"
 ```bash
 # Format
 cargo run -p y2016 -- <day> <input> ...
+cargo run -- <day> <input> ...
 
 # Example
 cargo run -p y2016 -- 1 "some random input"
+cargo run -- 1 "some random input"
 ```
 
 <!-- ## 2017 - Elixir

@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-pub fn one(input: Vec<String>) -> (i32, i32) {
+pub fn one(input: Vec<String>) -> (String, String) {
     let mut x: i32 = 0;
     let mut y: i32 = 0;
     let mut d: i32 = 0; // N - 0, E - 1, S - 2, W - 3
@@ -35,5 +35,5 @@ pub fn one(input: Vec<String>) -> (i32, i32) {
         }
     }
 
-    (x.abs() + y.abs(), repeat_dist)
+    ((x.abs() + y.abs()).to_string(), repeat_dist.to_string())
 }
