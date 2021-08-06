@@ -1,6 +1,7 @@
 use std::env;
 mod d1;
 mod d2;
+mod d3;
 
 fn main() {
     let mut args: Vec<String> = env::args().collect();
@@ -16,6 +17,7 @@ fn main() {
     let out = match &day[..] {
         "1" => d1::one(args),
         "2" => d2::two(args),
+        "3" => d3::three(args),
         _ => not_implemented(day),
     };
     println!("Outputs: {:?}", out);
