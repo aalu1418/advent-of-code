@@ -9,6 +9,13 @@ import (
 
 // Eleven implements the solution to day 11
 func Eleven(input string) (out1 string, out2 string) {
+	out1 = eleven(input)
+	out2 = eleven(out1)
+
+	return
+}
+
+func eleven(input string) string {
 	maxI := int(math.Pow(10, float64(len(input))))
 	temp1 := []byte(input)
 	var solved bool
@@ -62,7 +69,5 @@ func Eleven(input string) (out1 string, out2 string) {
 	if !solved {
 		log.Fatal(fmt.Sprintf("No match found in %d iterations, final iteration: %s", maxI, temp1))
 	}
-	out1 = string(temp1)
-
-	return
+	return string(temp1)
 }

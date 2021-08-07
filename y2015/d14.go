@@ -37,8 +37,8 @@ func (r *reindeer) step() {
 }
 
 // Fourteen implements the solution to day 14
-func Fourteen(input string, time string) (out1 int, out2 int) {
-	maxT, _ := strconv.Atoi(time)
+func Fourteen(input string) (out1 int, out2 int) {
+	maxT := 2503
 
 	// parse
 	deer := []reindeer{}

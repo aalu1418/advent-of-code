@@ -7,10 +7,10 @@ Practicing coding skills!
 
 ```bash
 # Format
-go run main.go 2015 <day> <input 1> <input 2> ...
+go run main.go <day> <input 1> <input 2> ...
 
 # Example
-go run main.go 2015 12 "some random input"
+go run main.go 12 "some random input"
 ```
 
 ## 2016 - Rust
@@ -18,11 +18,9 @@ go run main.go 2015 12 "some random input"
 
 ```bash
 # Format
-cargo run -p y2016 -- <day> <input> ...
 cargo run -- <day> <input> ...
 
 # Example
-cargo run -p y2016 -- 1 "some random input"
 cargo run -- 1 "some random input"
 ```
 

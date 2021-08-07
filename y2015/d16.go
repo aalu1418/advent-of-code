@@ -6,8 +6,19 @@ import (
 	"strings"
 )
 
+var tape = `children: 3
+cats: 7
+samoyeds: 2
+pomeranians: 3
+akitas: 0
+vizslas: 0
+goldfish: 5
+trees: 3
+cars: 2
+perfumes: 1`
+
 // Sixteen implements the solution for day 16
-func Sixteen(tape string, list string) (out1 string, out2 string) {
+func Sixteen(list string) (out1 string, out2 string) {
 	constants := map[string]int{}
 	for _, s := range strings.Split(tape, "\n") {
 		temp := strings.Split(s, ": ")

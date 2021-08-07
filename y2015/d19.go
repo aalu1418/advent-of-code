@@ -7,7 +7,11 @@ import (
 )
 
 // Nineteen implements the solution for day 19
-func Nineteen(pairs string, input string) (out1 int, out2 int) {
+func Nineteen(rawInput string) (out1 int, out2 int) {
+	inputs := strings.Split(rawInput, "\n\n")
+	pairs := inputs[0]
+	input := inputs[1]
+
 	sets := [][]string{}
 	shrink := map[string]string{}
 	expanded := []string{}
