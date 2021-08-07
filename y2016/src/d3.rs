@@ -34,7 +34,5 @@ pub fn three(input: Vec<String>) -> (String, String) {
             }
         }
     }
-
-    println!("{:?}", cols[0]);
     (count.to_string(), count2.to_string())
 }
