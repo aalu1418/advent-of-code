@@ -1,20 +1,25 @@
 repos:
-- repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v2.3.0
-  hooks:
-    - id: end-of-file-fixer
-    - id: trailing-whitespace
-- repo: https://github.com/troian/pre-commit-golang
-  rev: ab57c5d
-  hooks:
-    - id: go-fmt
-    - id: go-lint
-    - id: go-imports
-    - id: go-build
-- repo: https://github.com/doublify/pre-commit-rust
-  rev: v1.0
-  hooks:
-    - id: fmt
-      name: cargo fmt
-    - id: cargo-check
-      name: cargo check
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.3.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+  - repo: https://github.com/troian/pre-commit-golang
+    rev: ab57c5d
+    hooks:
+      - id: go-fmt
+      - id: go-lint
+      - id: go-imports
+      - id: go-build
+  - repo: https://github.com/doublify/pre-commit-rust
+    rev: v1.0
+    hooks:
+      - id: fmt
+        name: cargo fmt
+      - id: cargo-check
+        name: cargo check
+  - repo: https://github.com/psf/black
+    rev: 21.5b1
+    hooks:
+      - id: black
+        name: python fmt
