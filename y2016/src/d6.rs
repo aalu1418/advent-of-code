@@ -5,7 +5,6 @@ pub fn six(input: Vec<String>) -> (String, String) {
     let str: Vec<char> = input[0].chars().collect();
     for i in 0..8 {
         let mut chars: Vec<char> = str.iter().skip(i).step_by(9).copied().collect();
-        println!("{:?}", chars);
         chars.sort();
         let original = chars.clone();
         chars.dedup();

@@ -95,8 +95,8 @@ mod tests {
         assert_eq!(run("6"), ans("cyxeoccr", "batwpask"));
     }
 
-    // #[test]
-    // fn day_7_check() {
-    //     assert_eq!(run("7"), ans("cyxeoccr", "batwpask"));
-    // }
+    #[test]
+    fn day_7_check() {
+        assert_eq!(run("7"), ans("110", "242"));
+    }
 }
