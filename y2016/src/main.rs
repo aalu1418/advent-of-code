@@ -7,6 +7,7 @@ mod d4;
 mod d5;
 mod d6;
 mod d7;
+mod d8;
 
 fn main() {
     let mut args: Vec<String> = env::args().collect();
@@ -32,6 +33,7 @@ fn call(day: String, args: Vec<String>) -> (String, String) {
         "5" => d5::five(args),
         "6" => d6::six(args),
         "7" => d7::seven(args),
+        "8" => d8::eight(args),
         _ => not_implemented(day),
     }
 }
@@ -98,5 +100,10 @@ mod tests {
     #[test]
     fn day_7_check() {
         assert_eq!(run("7"), ans("110", "242"));
+    }
+
+    #[test]
+    fn day_8_check() {
+        assert_eq!(run("8"), ans("106", " ##  #### #    #### #     ##  #   #####  ##   ### \n#  # #    #    #    #    #  # #   ##    #  # #    \n#    ###  #    ###  #    #  #  # # ###  #    #    \n#    #    #    #    #    #  #   #  #    #     ##  \n#  # #    #    #    #    #  #   #  #    #  #    # \n ##  #    #### #### ####  ##    #  #     ##  ###  \n"));
     }
 }
