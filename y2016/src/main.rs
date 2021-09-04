@@ -118,6 +118,6 @@ mod tests {
 
     #[test]
     fn day_10_check() {
-        assert_eq!(run("10"), ans("98135", "10964557606"));
+        assert_eq!(run("10"), ans("bot 93", "47101"));
     }
 }
