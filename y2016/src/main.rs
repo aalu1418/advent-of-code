@@ -2,6 +2,7 @@ use std::env;
 
 mod d1;
 mod d10;
+mod d11;
 mod d2;
 mod d3;
 mod d4;
@@ -38,6 +39,7 @@ fn call(day: String, args: Vec<String>) -> (String, String) {
         "8" => d8::eight(args),
         "9" => d9::nine(args),
         "10" => d10::ten(args),
+        "11" => d11::eleven(args),
         _ => not_implemented(day),
     }
 }
@@ -119,5 +121,10 @@ mod tests {
     #[test]
     fn day_10_check() {
         assert_eq!(run("10"), ans("bot 93", "47101"));
+    }
+
+    #[test]
+    fn day_11_check() {
+        assert_eq!(run("11"), ans("", ""));
     }
 }
