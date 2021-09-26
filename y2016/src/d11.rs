@@ -5,6 +5,8 @@ use std::collections::HashMap;
 #[derive(Debug, Clone, Hash, Eq, PartialEq)]
 struct Building {
     e: usize,
+    moves: usize,
+    rank: usize,
     floor: [Vec<String>; 4],
 }
 
@@ -12,6 +14,8 @@ impl Building {
     fn init() -> Building {
         Building {
             e: 0,
+            moves: 0,
+            rank: 0,
             floor: [Vec::new(), Vec::new(), Vec::new(), Vec::new()],
         }
     }
@@ -66,6 +70,14 @@ impl Building {
         }
     }
 
+    fn _rank(&mut self) {
+        let mut sum = 0;
+        for (i, f) in self.floor.iter().enumerate() {
+            sum += f.len() * i;
+        }
+        self.rank = sum;
+    }
+
     fn _move(&mut self, parts: Vec<String>, up: bool) -> bool {
         // only allow 1 or 2 inputs
         if parts.len() != 1 && parts.len() != 2 {
@@ -87,6 +99,8 @@ impl Building {
         }
 
         self._sort();
+        self._rank();
+        self.moves += 1;
         return true;
     }
 
@@ -131,6 +145,7 @@ pub fn eleven(input: Vec<String>) -> (String, String) {
         i += 1;
     }
     building._sort();
+    building._rank();
     let out1 = search(building.clone());
     let new_components = vec![
         "g-elerium".to_string(),
@@ -140,52 +155,66 @@ pub fn eleven(input: Vec<String>) -> (String, String) {
     ];
     building.floor[0].extend(new_components);
     building._sort();
-    // let out2 = search(building);
+    building._rank();
+    let out2 = search(building);
 
-    (out1.to_string(), "".to_string())
+    (out1.to_string(), out2.to_string())
 }
 
 fn search(building: Building) -> usize {
     let mut visited = HashMap::new();
     let mut current: Vec<Building> = Vec::new();
-    visited.insert(building.clone(), true);
+    let mut floors = building.floor.clone();
+    floors[building.e].push("e".to_string());
+    visited.insert(floors, true);
     current.push(building);
+    let mut answer = Building::init();
     let mut i = 0;
     'outer: loop {
-        println!("Round {}: length {}", i, current.len());
-        let mut next: Vec<Building> = Vec::new();
-
-        // select the each instance from current
-        for b in &current {
-            // check if end condition met
-            if b.end() {
-                println!("End condition met!");
-                break 'outer;
-            }
-
-            // find all moves
-            let combs = b.combinations();
-            for step in combs {
-                let mut temp = b.clone();
-                // check if move is valid & store to compare previous states check
-                if temp.up(step.clone()) && temp.valid() && !visited.contains_key(&temp) {
-                    visited.insert(temp.clone(), true);
-                    next.push(temp);
-                }
-                let mut temp = b.clone();
-                // check if move is valid & store to compare previous states check
-                if temp.down(step) && temp.valid() && !visited.contains_key(&temp) {
-                    visited.insert(temp.clone(), true);
-                    next.push(temp);
-                }
-            }
-        }
-        if next.len() == 0 {
-            println!("No options found. Last instance: {:?}", &current);
+        if current.len() == 0 {
+            println!("No answer found after {} iterations", i);
             break 'outer;
         }
-        current = next;
+
+        let b = current[0].clone();
+        current.drain(0..1);
+
+        // check if end condition met
+        if b.end() {
+            println!(
+                "End condition met after {} iterations and {} depth",
+                i, b.moves
+            );
+            answer = b;
+            break 'outer;
+        }
+
+        // find all moves
+        let combs = b.combinations();
+        for step in combs {
+            let mut temp = b.clone();
+            // check if move is valid & store to compare previous states check
+            if temp.up(step.clone()) && temp.valid() {
+                let mut floors = temp.floor.clone();
+                floors[temp.e].push("e".to_string());
+                if !visited.contains_key(&floors) {
+                    visited.insert(floors, true);
+                    current.push(temp);
+                }
+            }
+            let mut temp = b.clone();
+            // check if move is valid & store to compare previous states check
+            if temp.down(step.clone()) && temp.valid() {
+                let mut floors = temp.floor.clone();
+                floors[temp.e].push("e".to_string());
+                if !visited.contains_key(&floors) {
+                    visited.insert(floors, true);
+                    current.push(temp);
+                }
+            }
+        }
         i += 1;
+        current.sort_by(|a, b| b.rank.cmp(&a.rank));
     }
-    return i;
+    return answer.moves;
 }
