@@ -21,7 +21,7 @@ impl Building {
         for f in &self.floor {
             sum += f.len();
         }
-        sum == 0
+        sum == self.floor.last().unwrap().len()
     }
 
     fn valid(&self) -> bool {
@@ -131,9 +131,22 @@ pub fn eleven(input: Vec<String>) -> (String, String) {
         i += 1;
     }
     building._sort();
+    let out1 = search(building.clone());
+    let new_components = vec![
+        "g-elerium".to_string(),
+        "m-elerium".to_string(),
+        "g-dilithium".to_string(),
+        "m-dilithium".to_string(),
+    ];
+    building.floor[0].extend(new_components);
+    building._sort();
+    // let out2 = search(building);
 
+    (out1.to_string(), "".to_string())
+}
+
+fn search(building: Building) -> usize {
     let mut visited = HashMap::new();
-
     let mut current: Vec<Building> = Vec::new();
     visited.insert(building.clone(), true);
     current.push(building);
@@ -146,6 +159,7 @@ pub fn eleven(input: Vec<String>) -> (String, String) {
         for b in &current {
             // check if end condition met
             if b.end() {
+                println!("End condition met!");
                 break 'outer;
             }
 
@@ -153,13 +167,13 @@ pub fn eleven(input: Vec<String>) -> (String, String) {
             let combs = b.combinations();
             for step in combs {
                 let mut temp = b.clone();
-                // check if move is valid (include way to check if new state has been seen before?)
+                // check if move is valid & store to compare previous states check
                 if temp.up(step.clone()) && temp.valid() && !visited.contains_key(&temp) {
                     visited.insert(temp.clone(), true);
                     next.push(temp);
                 }
                 let mut temp = b.clone();
-                // check if move is valid (include way to check if new state has been seen before?)
+                // check if move is valid & store to compare previous states check
                 if temp.down(step) && temp.valid() && !visited.contains_key(&temp) {
                     visited.insert(temp.clone(), true);
                     next.push(temp);
@@ -173,6 +187,5 @@ pub fn eleven(input: Vec<String>) -> (String, String) {
         current = next;
         i += 1;
     }
-
-    (i.to_string(), "".to_string())
+    return i;
 }
