@@ -139,6 +139,6 @@ mod tests {
     }
     #[test]
     fn day_14_check() {
-        assert_eq!(run("14"), ans("92", "124"));
+        assert_eq!(run("14"), ans("23769", "20606"));
     }
 }

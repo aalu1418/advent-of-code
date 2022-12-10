@@ -11,6 +11,9 @@ go run main.go <day> <input 1> <input 2> ...
 
 # Example
 go run main.go 12 "some random input"
+
+# run all
+go test -v ./...
 ```
 
 ## 2016 - Rust
@@ -22,6 +25,9 @@ cargo run -- <day> <input> ...
 
 # Example
 cargo run -- 1 "some random input"
+
+# run all
+cargo test
 ```
 
 <!-- ## 2017 - Elixir

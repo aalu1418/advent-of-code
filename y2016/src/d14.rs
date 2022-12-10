@@ -2,53 +2,70 @@ use md5;
 
 pub fn fourteen(input: Vec<String>) -> (String, String) {
     let salt = &input[0];
+
+    (find(salt, generate), find(salt, generate2))
+}
+
+fn find(salt: &String, g: fn(&String, &isize) -> String) -> String {
     let mut i = 0;
 
-    // initialize first 1000
+    // generate first 1000
     let mut hashes: Vec<String> = Vec::new();
-    for i in 0..1000 {
-        let hash = format!("{:x}", md5::compute(format!("{}{}", salt, i)));
-        hashes.push(hash);
+    for k in 0..1001 {
+        hashes.push(g(salt, &k));
     }
 
     let mut found = 0;
     'outer: loop {
-        // end condition
-        if found == 64 {
-            break 'outer;
-        }
+        let hash = hashes[0].clone();
+        hashes.drain(0..1);
+        let c = triple(&hash);
 
-        let test_key = hashes[0].clone();
-        hashes.drain(0..1); // remove first instance from stack
-
-        // generate hash to form next 1000 to check
-        let hash = format!("{:x}", md5::compute(format!("{}{}", salt, i)));
-        hashes.push(hash);
-
-        // check if there's a triple
-        let c = triple(&test_key);
-        if &c != "" {
-            // if there's a triple search the vec of 1000 to find match
+        if c != "" {
+            // println!("found triple: {} {} {}", i, c, hash);
+            let mut f = false;
             for h in &hashes {
                 if h.contains(&vec![c.clone(); 5].join("")) {
-                    println!("{} {} {}", i, c, h);
-                    found += 1;
+                    // println!("validated: {} {} {}", i, c, h);
+                    f = true;
                     break;
                 }
             }
-        }
 
+            if f {
+                found += 1;
+
+                // end condition
+                if found == 64 {
+                    break 'outer;
+                }
+            }
+        }
+        hashes.push(g(salt, &(i + 1001)));
         i += 1;
     }
 
-    (i.to_string(), "".to_string())
+    i.to_string()
+}
+
+fn generate(s: &String, i: &isize) -> String {
+    format!("{:x}", md5::compute(format!("{}{}", s, i)))
+}
+
+fn generate2(s: &String, i: &isize) -> String {
+    let mut h = generate(s, i);
+
+    for _ in 0..2016 {
+        h = format!("{:x}", md5::compute(h));
+    }
+    return h;
 }
 
 fn triple(s: &String) -> String {
     let s: Vec<&str> = s.split("").collect();
     let mut t = "";
     let mut n = 0;
-    for (i, c) in s.iter().enumerate() {
+    for (_, c) in s.iter().enumerate() {
         if t != *c {
             t = c;
             n = 1;
@@ -58,10 +75,7 @@ fn triple(s: &String) -> String {
 
         // end condition
         if n == 3 {
-            // if at the end or the next char is not the same
-            if i == s.len() - 1 || t != s[i + 1] {
-                return t.to_string();
-            }
+            return t.to_string();
         }
     }
 
