@@ -7,6 +7,7 @@ mod d12;
 mod d13;
 mod d14;
 mod d15;
+mod d16;
 mod d2;
 mod d3;
 mod d4;
@@ -48,6 +49,7 @@ fn call(day: String, args: Vec<String>) -> (String, String) {
         "13" => d13::thirteen(args),
         "14" => d14::fourteen(args),
         "15" => d15::fifteen(args),
+        "16" => d16::sixteen(args),
         _ => not_implemented(day),
     }
 }
@@ -146,5 +148,9 @@ mod tests {
     #[test]
     fn day_15_check() {
         assert_eq!(run("15"), ans("148737", "2353212"));
+    }
+    #[test]
+    fn day_16_check() {
+        assert_eq!(run("16"), ans("10010101010011101", "2353212"));
     }
 }
