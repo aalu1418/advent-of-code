@@ -1,22 +1,22 @@
 pub fn sixteen(input: Vec<String>) -> (String, String) {
-    let base = input[0].clone();
+    let base: Vec<char> = input[0].clone().chars().collect();
     let max = 272;
 
-    let base2 = input[0].clone();
+    let base2 = base.clone();
     let max2 = 35651584;
 
-    (checksum(fill(base, max)), checksum(fill(base2, max)))
+    (checksum(fill(base, max)), checksum(fill(base2, max2)))
 }
 
-fn fill(base: String, length: usize) -> String {
+fn fill(base: Vec<char>, length: usize) -> Vec<char> {
     if base.len() >= length {
-        return base[0..length].to_string();
+        return base[0..length].to_vec();
     }
 
-    let a = base.clone();
-    let b: String = base
-        .chars()
-        .map(|c| match c {
+    let mut out = base.clone();
+    let mut b: Vec<char> = base
+        .iter()
+        .map(|&c| match c {
             '1' => '0',
             '0' => '1',
             _ => 'E',
@@ -24,27 +24,22 @@ fn fill(base: String, length: usize) -> String {
         .rev()
         .collect();
 
-    return fill(a + "0" + &b, length);
+    out.push('0');
+    out.append(&mut b);
+
+    return fill(out, length);
 }
 
-fn checksum(base: String) -> String {
+fn checksum(base: Vec<char>) -> String {
     if base.len() % 2 == 1 {
-        return base;
+        return base.iter().collect();
     }
 
-    let out: String = base
-        .char_indices()
-        .map(|(i, c)| {
-            if i % 2 == 0 {
-                if c == base.chars().nth(i + 1).unwrap() {
-                    "1"
-                } else {
-                    "0"
-                }
-            } else {
-                ""
-            }
-        })
+    let out: Vec<char> = base
+        .iter()
+        .enumerate()
+        .filter(|&(i, _)| i % 2 == 0)
+        .map(|(i, c)| if *c == base[i + 1] { '1' } else { '0' })
         .collect();
     return checksum(out);
 }
