@@ -68,9 +68,8 @@ impl Path {
 static DIRECTION: [char; 4] = ['U', 'D', 'L', 'R'];
 
 fn run(mut stack: Vec<Path>, mut max: usize, mut min_step: Vec<char>) -> (String, String) {
-    println!("{}", stack.len());
-    // if stack.len() == 0 {
-    if min_step.len() != 0 {
+    if stack.len() == 0 {
+        // if min_step.len() != 0 {
         return (min_step.iter().collect(), max.to_string());
     }
 

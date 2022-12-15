@@ -65,6 +65,10 @@ fn not_implemented(day: String) -> (String, String) {
 mod tests {
     use super::call;
     use std::fs;
+    use std::thread;
+
+    const STACK_SIZE: usize = 1024 * 1024 * 1024;
+
     fn read_input(filename: &String) -> Vec<String> {
         let filepath = format!("./testdata/{}.txt", filename);
         let msg = format!("Error reading {}", filepath);
@@ -157,6 +161,12 @@ mod tests {
     }
     #[test]
     fn day_17_check() {
-        assert_eq!(run("17"), ans("RDULRDDRRD", "01100111101101111"));
+        // requires larger stack size for recursion
+        let child = thread::Builder::new()
+            .stack_size(STACK_SIZE)
+            .spawn(|| assert_eq!(run("17"), ans("RDULRDDRRD", "752")))
+            .unwrap();
+
+        child.join().unwrap();
     }
 }
