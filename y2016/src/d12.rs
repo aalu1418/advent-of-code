@@ -89,6 +89,16 @@ pub fn run(input: &String, a_val: isize, c_val: isize) -> String {
 
                 input_list[ind as usize] = cmd;
             }
+            "out" => {
+                let val;
+                let mut chars = l[1].chars();
+                if chars.next().unwrap().is_alphabetic() {
+                    val = buckets[l[1]];
+                } else {
+                    val = l[1].parse().unwrap();
+                }
+                println!("{}", val);
+            }
             _ => {
                 println!("'{}' not found", l[0])
             }
