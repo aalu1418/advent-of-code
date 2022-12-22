@@ -15,6 +15,7 @@ mod d2;
 mod d20;
 mod d21;
 mod d22;
+mod d23;
 mod d3;
 mod d4;
 mod d5;
@@ -62,6 +63,7 @@ fn call(day: String, args: Vec<String>) -> (String, String) {
         "20" => d20::twenty(args),
         "21" => d21::twentyone(args),
         "22" => d22::twentytwo(args),
+        "23" => d23::twentythree(args),
         _ => not_implemented(day),
     }
 }
@@ -198,5 +200,9 @@ mod tests {
     #[test]
     fn day_22_check() {
         assert_eq!(run("22"), ans("888", "236"));
+    }
+    #[test]
+    fn day_23_check() {
+        assert_eq!(run("23"), ans("12315", "479008875"));
     }
 }
