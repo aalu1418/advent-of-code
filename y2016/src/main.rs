@@ -197,6 +197,6 @@ mod tests {
     }
     #[test]
     fn day_22_check() {
-        assert_eq!(run("22"), ans("888", "afhdbegc"));
+        assert_eq!(run("22"), ans("888", "236"));
     }
 }
